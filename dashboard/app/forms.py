@@ -38,7 +38,6 @@ class TemplateForm(Form):
             return False
         return True
 
-
 class SendTestTemplateForm(Form):
     ''' Form to send a test template '''
     subject = StringField('Subject')
