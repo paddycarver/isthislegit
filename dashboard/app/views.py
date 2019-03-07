@@ -83,13 +83,15 @@ def templates():
         templates = Template.domain_query(g.domain).fetch()
         return render_template("templates.html", templates=templates)
 
+    if request.form['sender'] == "":
+        request.form['sender'] = g.user.email()
     form = TemplateForm(request.form, domain=g.domain)
     if form.validate_on_submit():
         template = Template(
             name=form.name.data,
             text=form.text.data,
             subject=form.subject.data,
-            sender=g.user.email(),
+            sender=form.sender.data,
             owner_domain=g.domain,
             created_by=g.user.email())
         template.put()
@@ -109,12 +111,14 @@ def edit_template(template_id):
     if not template or template.owner_domain != g.domain:
         abort(404)
 
+    if request.form['sender'] == "":
+        request.form['sender'] = g.user.email()
     form = TemplateForm(request.form, domain=g.domain, template_id=template_id)
     if form.validate_on_submit():
         template.name = form.name.data
         template.text = form.text.data
         template.subject = form.subject.data
-        template.sender = g.user.email()
+        template.sender = form.sender.data
         template.put()
         return jsonify(template.to_dict())
     return json_error(400, list_errors(form), {})

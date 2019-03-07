@@ -16,6 +16,7 @@ class TemplateForm(Form):
 
     subject = StringField('Subject')
     text = StringField('Message')
+    sender = StringField('Sender')
 
     def __init__(self, *args, **kwargs):
         """ Create new template """
